@@ -213,6 +213,8 @@ Projeto livre para uso educacional e comercial.
 
 ## 👨‍💻 Autor
 
+**Marcelo Murilo Dantas**
+
 Desenvolvido como case técnico de classificação de emails com IA.
 
 ---
