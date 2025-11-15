@@ -25,18 +25,18 @@
                 <div class="mode-selector">
                     <label class="mode-label">Modo de Análise:</label>
                     <div class="mode-toggle">
-                        <input type="radio" id="modo-rapido" name="modo" value="rapido">
+                        <input type="radio" id="modo-rapido" name="modo" value="rapido" checked>
                         <label for="modo-rapido" class="mode-option">
                             <span class="mode-icon">⚡</span>
                             <span class="mode-name">Rápido</span>
                             <span class="mode-desc">NLP - Regras</span>
                         </label>
                         
-                        <input type="radio" id="modo-semantico" name="modo" value="semantico" checked>
-                        <label for="modo-semantico" class="mode-option">
+                        <input type="radio" id="modo-semantico" name="modo" value="semantico" disabled>
+                        <label for="modo-semantico" class="mode-option" style="opacity: 0.5; cursor: not-allowed;" title="Modo semântico desabilitado (biblioteca muito pesada para Render)">
                             <span class="mode-icon">🧠</span>
                             <span class="mode-name">Semântico</span>
-                            <span class="mode-desc">MiniLM - Gratuito</span>
+                            <span class="mode-desc">Indisponível</span>
                         </label>
 
                         <input type="radio" id="modo-inteligente" name="modo" value="inteligente">

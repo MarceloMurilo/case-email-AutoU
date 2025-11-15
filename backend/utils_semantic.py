@@ -2,14 +2,23 @@
 """
 Classificação Semântica usando MiniLM-L6-v2
 Com detecção de negação e ajustes inteligentes
+
+NOTA: Modo semântico desabilitado no Render (biblioteca muito pesada).
+Faz fallback para modo NLP quando sentence-transformers não está disponível.
 """
 
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
-
-# Carregar modelo MiniLM (somente 1 vez)
-model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+try:
+    from sentence_transformers import SentenceTransformer
+    from sklearn.metrics.pairwise import cosine_similarity
+    import numpy as np
+    
+    # Carregar modelo MiniLM (somente 1 vez)
+    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    SEMANTIC_AVAILABLE = True
+except ImportError:
+    # Fallback: usar NLP quando sentence-transformers não está disponível
+    SEMANTIC_AVAILABLE = False
+    from utils_nlp import classify_email_nlp, generate_reply_nlp
 
 
 # 🚫 Frases que anulam produtividade mesmo se o texto parecer técnico
@@ -63,18 +72,35 @@ REFERENCIAS = {
     ]
 }
 
-# Criar embeddings de referência só 1 vez
-ref_embeddings = {
-    cat: model.encode(frases)
-    for cat, frases in REFERENCIAS.items()
-
-}
+# Criar embeddings de referência só 1 vez (se disponível)
+if SEMANTIC_AVAILABLE:
+    ref_embeddings = {
+        cat: model.encode(frases)
+        for cat, frases in REFERENCIAS.items()
+    }
+else:
+    ref_embeddings = {}
 
 
 def classify_email_semantic(text: str) -> dict:
     """
     Classificação usando MiniLM com heurísticas inteligentes.
+    Faz fallback para NLP se sentence-transformers não estiver disponível.
     """
+    if not SEMANTIC_AVAILABLE:
+        # Fallback para NLP quando semântico não está disponível
+        resultado = classify_email_nlp(text)
+        return {
+            "categoria": resultado["categoria"],
+            "analise_semantica": {
+                "similaridade_produtivo": 0,
+                "similaridade_improdutivo": 0,
+                "diferenca": 0,
+                "nota": "Modo semântico não disponível (usando NLP como fallback)"
+            },
+            "confianca": f"{resultado['confianca']}%"
+        }
+    
     texto_lower = text.lower()
 
     # 1) 🔍 Regra de negação — domina tudo
@@ -116,7 +142,12 @@ def classify_email_semantic(text: str) -> dict:
 def generate_reply_semantic(text: str, categoria: str) -> str:
     """
     Resposta template baseada na categoria semântica
+    Faz fallback para NLP se sentence-transformers não estiver disponível.
     """
+    if not SEMANTIC_AVAILABLE:
+        # Fallback para NLP quando semântico não está disponível
+        return generate_reply_nlp(text, categoria)
+    
     if categoria == "PRODUTIVO":
         return """Olá!
 
