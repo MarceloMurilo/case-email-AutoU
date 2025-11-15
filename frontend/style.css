@@ -554,6 +554,42 @@ textarea:focus {
     color: #5A4450;
 }
 
+.server-warning {
+    background: linear-gradient(135deg, #FFF3CD 0%, #FFE69C 100%);
+    border: 2px solid #FFC107;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+    animation: slideDown 0.3s ease-out;
+}
+
+.server-warning p {
+    color: #856404;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.server-warning strong {
+    color: #664D03;
+}
+
+.server-warning.hidden {
+    display: none;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .error-message {
     background: rgba(244, 67, 54, 0.25);
     backdrop-filter: blur(10px);

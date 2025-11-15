@@ -1,8 +1,17 @@
 // Configuração da API
 // Detectar automaticamente se está em produção ou desenvolvimento
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:8000'  // Desenvolvimento local
-    : 'https://case-email-autou.onrender.com'; // Backend em produção (Render)
+const IS_PRODUCTION = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+const API_URL = IS_PRODUCTION
+    ? 'https://case-email-autou.onrender.com' // Backend em produção (Render)
+    : 'http://localhost:8000';  // Desenvolvimento local
+
+// Mostrar aviso do servidor se estiver em produção
+if (IS_PRODUCTION) {
+    const serverWarning = document.getElementById('server-warning');
+    if (serverWarning) {
+        serverWarning.classList.remove('hidden');
+    }
+}
 
 // Elementos DOM
 const fileUpload = document.getElementById('file-upload');
@@ -62,11 +71,26 @@ processBtn.addEventListener('click', async () => {
     processBtn.classList.add('loading');
     processBtn.disabled = true;
     
+    // Mostrar aviso se estiver em produção (servidor pode estar dormindo)
+    if (IS_PRODUCTION) {
+        const serverWarning = document.getElementById('server-warning');
+        if (serverWarning) {
+            serverWarning.classList.remove('hidden');
+        }
+    }
+    
+    // Criar AbortController para timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 segundos de timeout
+    
     try {
         const response = await fetch(`${API_URL}/processar-email`, {
             method: 'POST',
-            body: formData
+            body: formData,
+            signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
         
         if (!response.ok) {
             const error = await response.json();
@@ -74,10 +98,30 @@ processBtn.addEventListener('click', async () => {
         }
         
         const data = await response.json();
+        
+        // Esconder aviso do servidor após sucesso
+        if (IS_PRODUCTION) {
+            const serverWarning = document.getElementById('server-warning');
+            if (serverWarning) {
+                serverWarning.classList.add('hidden');
+            }
+        }
+        
         displayResults(data);
         
     } catch (error) {
-        showError(`Erro: ${error.message}`);
+        clearTimeout(timeoutId);
+        
+        // Detectar se é erro de timeout ou conexão (servidor dormindo)
+        if (error.name === 'AbortError' || error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+            showError(
+                '⏳ O servidor está sendo ativado. Isso pode levar até 30 segundos na primeira requisição. ' +
+                'Por favor, aguarde alguns instantes e tente novamente. ' +
+                'O servidor precisa "acordar" após um período de inatividade.'
+            );
+        } else {
+            showError(`Erro: ${error.message}`);
+        }
     } finally {
         processBtn.classList.remove('loading');
         processBtn.disabled = false;
