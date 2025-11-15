@@ -107,13 +107,13 @@ function displayResults(data) {
     if (data.analise_nlp) {
         const nlpDetails = document.getElementById('nlp-details');
         nlpDetails.innerHTML = `
-            <strong>Total de palavras:</strong> ${data.analise_nlp.total_palavras}<br>
-            <strong>Palavras relevantes:</strong> ${data.analise_nlp.palavras_filtradas}<br>
-            <strong>Indicadores produtivos:</strong> ${data.analise_nlp.palavras_chave_produtivo}<br>
-            <strong>Indicadores improdutivos:</strong> ${data.analise_nlp.palavras_chave_improdutivo}<br>
-            <strong>Contém números:</strong> ${data.analise_nlp.tem_numero ? 'Sim' : 'Não'}<br>
-            <strong>Tipo de pergunta:</strong> ${data.analise_nlp.tipo_pergunta}<br>
-            <strong>Confiança:</strong> ${data.confianca}
+            <strong>Total de palavras analisadas:</strong> ${data.analise_nlp.total_palavras}<br>
+            <strong>Palavras importantes encontradas:</strong> ${data.analise_nlp.palavras_filtradas}<br>
+            <strong>Indicadores de email produtivo:</strong> ${data.analise_nlp.palavras_chave_produtivo}<br>
+            <strong>Indicadores de email improdutivo:</strong> ${data.analise_nlp.palavras_chave_improdutivo}<br>
+            <strong>Contém números ou códigos:</strong> ${data.analise_nlp.tem_numero ? 'Sim' : 'Não'}<br>
+            <strong>Tipo de mensagem:</strong> ${data.analise_nlp.tipo_pergunta}<br>
+            <strong>Nível de confiança:</strong> ${data.confianca}
         `;
         analiseNlpSection.classList.remove('hidden');
     } else {
@@ -125,10 +125,10 @@ function displayResults(data) {
     if (data.analise_semantica) {
         const semanticDetails = document.getElementById('semantic-details');
         semanticDetails.innerHTML = `
-            <strong>Similaridade Produtivo:</strong> ${data.analise_semantica.similaridade_produtivo}%<br>
-            <strong>Similaridade Improdutivo:</strong> ${data.analise_semantica.similaridade_improdutivo}%<br>
-            <strong>Diferença:</strong> ${data.analise_semantica.diferenca}%<br>
-            <strong>Confiança:</strong> ${data.confianca}
+            <strong>Semelhança com emails produtivos:</strong> ${data.analise_semantica.similaridade_produtivo}%<br>
+            <strong>Semelhança com emails improdutivos:</strong> ${data.analise_semantica.similaridade_improdutivo}%<br>
+            <strong>Diferença entre categorias:</strong> ${data.analise_semantica.diferenca}%<br>
+            <strong>Nível de confiança:</strong> ${data.confianca}
         `;
         analiseSemanticaSection.classList.remove('hidden');
     } else {

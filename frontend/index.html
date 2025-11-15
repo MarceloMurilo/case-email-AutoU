@@ -23,27 +23,27 @@
                 <h2>Enviar Email</h2>
                 
                 <div class="mode-selector">
-                    <label class="mode-label">Modo de Análise:</label>
+                    <label class="mode-label">Escolha o tipo de análise:</label>
                     <div class="mode-toggle">
                         <input type="radio" id="modo-rapido" name="modo" value="rapido" checked>
                         <label for="modo-rapido" class="mode-option">
                             <span class="mode-icon">⚡</span>
                             <span class="mode-name">Rápido</span>
-                            <span class="mode-desc">NLP - Regras</span>
+                            <span class="mode-desc">Análise básica • Gratuito</span>
                         </label>
                         
-                        <input type="radio" id="modo-semantico" name="modo" value="semantico" disabled>
-                        <label for="modo-semantico" class="mode-option" style="opacity: 0.5; cursor: not-allowed;" title="Modo semântico desabilitado (biblioteca muito pesada para Render)">
+                        <input type="radio" id="modo-semantico" name="modo" value="semantico">
+                        <label for="modo-semantico" class="mode-option" title="Disponível apenas em ambiente de desenvolvimento">
                             <span class="mode-icon">🧠</span>
-                            <span class="mode-name">Semântico</span>
-                            <span class="mode-desc">Indisponível</span>
+                            <span class="mode-name">Avançado</span>
+                            <span class="mode-desc">Análise inteligente • Localhost</span>
                         </label>
 
                         <input type="radio" id="modo-inteligente" name="modo" value="inteligente">
                         <label for="modo-inteligente" class="mode-option">
                             <span class="mode-icon">🎯</span>
                             <span class="mode-name">Premium</span>
-                            <span class="mode-desc">GPT - Pago</span>
+                            <span class="mode-desc">IA completa • Pago</span>
                         </label>
                     </div>
                 </div>
@@ -96,12 +96,12 @@
                     </div>
 
                     <div id="analise-nlp" class="result-item hidden">
-                        <span class="result-label">Análise NLP:</span>
+                        <span class="result-label">Detalhes da Análise:</span>
                         <div id="nlp-details" class="nlp-box"></div>
                     </div>
 
                     <div id="analise-semantica" class="result-item hidden">
-                        <span class="result-label">Análise Semântica:</span>
+                        <span class="result-label">Detalhes da Análise:</span>
                         <div id="semantic-details" class="semantic-box"></div>
                     </div>
 
