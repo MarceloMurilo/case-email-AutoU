@@ -1,5 +1,8 @@
 // Configuração da API
-const API_URL = 'http://localhost:8000'; // Alterar para URL do Render em produção
+// Detectar automaticamente se está em produção ou desenvolvimento
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000'  // Desenvolvimento local
+    : 'https://case-email-autou.onrender.com'; // Backend em produção (Render)
 
 // Elementos DOM
 const fileUpload = document.getElementById('file-upload');
