@@ -21,8 +21,8 @@ app = FastAPI(title="Email Leitor API")
 # CORS para permitir frontend acessar
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=["*"],  # Permite todas as origens
+    allow_credentials=False,  # Deve ser False quando allow_origins=["*"]
     allow_methods=["*"],
     allow_headers=["*"],
 )
