@@ -1,0 +1,13 @@
+Assunto: Erro no sistema
+
+Prezados,
+
+Estou tentando acessar o portal desde ontem mas continua dando erro 500.
+
+Já tentei limpar cache e usar outro navegador, mas não funciona.
+
+Podem verificar o servidor? É urgente pois preciso enviar relatórios hoje.
+
+Obrigado,
+Carlos Pereira
+

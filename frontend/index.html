@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Leitor - Classificador Inteligente</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <img src="assets/cafe_ia.png" alt="Email Leitor" class="logo">
+                <div class="header-text">
+                    <h1> Email Leitor</h1>
+                    <p class="subtitle">Classificação inteligente de emails com IA</p>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="upload-section">
+                <h2>Enviar Email</h2>
+                
+                <div class="mode-selector">
+                    <label class="mode-label">Modo de Análise:</label>
+                    <div class="mode-toggle">
+                        <input type="radio" id="modo-rapido" name="modo" value="rapido">
+                        <label for="modo-rapido" class="mode-option">
+                            <span class="mode-icon">⚡</span>
+                            <span class="mode-name">Rápido</span>
+                            <span class="mode-desc">NLP - Regras</span>
+                        </label>
+                        
+                        <input type="radio" id="modo-semantico" name="modo" value="semantico" checked>
+                        <label for="modo-semantico" class="mode-option">
+                            <span class="mode-icon">🧠</span>
+                            <span class="mode-name">Semântico</span>
+                            <span class="mode-desc">MiniLM - Gratuito</span>
+                        </label>
+
+                        <input type="radio" id="modo-inteligente" name="modo" value="inteligente">
+                        <label for="modo-inteligente" class="mode-option">
+                            <span class="mode-icon">🎯</span>
+                            <span class="mode-name">Premium</span>
+                            <span class="mode-desc">GPT - Pago</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="file-upload" class="file-label">
+                        📁 Escolher arquivo (.txt ou .pdf)
+                    </label>
+                    <input type="file" id="file-upload" accept=".txt,.pdf">
+                    <span id="file-name" class="file-name"></span>
+                </div>
+
+                <div class="divider">
+                    <span>OU</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="text-input">Cole o texto do email:</label>
+                    <textarea 
+                        id="text-input" 
+                        placeholder="Cole aqui o conteúdo do email..."
+                        rows="8"
+                    ></textarea>
+                </div>
+
+                <button id="process-btn" class="btn-primary">
+                    <span class="btn-text">Processar Email</span>
+                    <span class="btn-loading">Processando...</span>
+                </button>
+            </div>
+
+            <div id="results" class="results-section hidden">
+                <h2>Resultados</h2>
+                
+                <div class="result-card">
+                    <div class="result-stats">
+                        <span id="modo-usado" class="stat-badge"></span>
+                        <span id="tempo" class="stat-badge"></span>
+                        <span id="custo" class="stat-badge"></span>
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-label">Categoria:</span>
+                        <span id="categoria" class="categoria-badge"></span>
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-label">Resposta Sugerida:</span>
+                        <div id="resposta" class="resposta-box"></div>
+                    </div>
+
+                    <div id="analise-nlp" class="result-item hidden">
+                        <span class="result-label">Análise NLP:</span>
+                        <div id="nlp-details" class="nlp-box"></div>
+                    </div>
+
+                    <div id="analise-semantica" class="result-item hidden">
+                        <span class="result-label">Análise Semântica:</span>
+                        <div id="semantic-details" class="semantic-box"></div>
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-label">Texto Original:</span>
+                        <div id="texto-original" class="texto-box"></div>
+                    </div>
+                </div>
+
+                <button id="new-analysis" class="btn-secondary">
+                    Nova Análise
+                </button>
+            </div>
+
+            <div id="error" class="error-message hidden"></div>
+        </main>
+
+        <footer>
+            <p>Desenvolvido com FastAPI + OpenAI</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+

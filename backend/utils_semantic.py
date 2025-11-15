@@ -1,0 +1,135 @@
+# utils_semantic.py
+"""
+Classificação Semântica usando MiniLM-L6-v2
+Com detecção de negação e ajustes inteligentes
+"""
+
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+# Carregar modelo MiniLM (somente 1 vez)
+model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+
+
+# 🚫 Frases que anulam produtividade mesmo se o texto parecer técnico
+NEGACOES = [
+    "não precisa", "nao precisa",
+    "não é necessário", "nao e necessario",
+    "não necessita", "nao necessita",
+    "pode desconsiderar", "podem desconsiderar",
+    "já foi resolvido", "ja foi resolvido",
+    "tudo certo por aqui",
+    "nenhuma ação", "nenhuma acao",
+    "não exige retorno", "nao exige retorno",
+    "apenas registro", "só registro",
+    "somente para informar", "apenas para informar"
+]
+
+
+# 📌 Referências ampliadas
+REFERENCIAS = {
+    "produtivo": [
+        "protocolo",
+        "número de chamado",
+        "segue em anexo",
+        "currículo",
+        "documento",
+        "pedido",
+        "solicitação",
+        "informações",
+        "atualização",
+        "necessário verificar",
+        "urgente",
+        "preciso de ajuda",
+        "pode verificar",
+        "erro no sistema",
+        "chamado em aberto"
+    ],
+    "improdutivo": [
+        "feliz natal",
+        "parabéns",
+        "obrigado",
+        "mensagem social",
+        "bom dia",
+        "boa tarde",
+        "felicidades",
+        "bom final de semana",
+        "apenas informando",
+        "sem necessidade de retorno",
+        "não precisa fazer nada",
+        "tudo resolvido internamente",
+        "podem ignorar"
+    ]
+}
+
+# Criar embeddings de referência só 1 vez
+ref_embeddings = {
+    cat: model.encode(frases)
+    for cat, frases in REFERENCIAS.items()
+
+}
+
+
+def classify_email_semantic(text: str) -> dict:
+    """
+    Classificação usando MiniLM com heurísticas inteligentes.
+    """
+    texto_lower = text.lower()
+
+    # 1) 🔍 Regra de negação — domina tudo
+    for n in NEGACOES:
+        if n in texto_lower:
+            return {
+                "categoria": "IMPRODUTIVO",
+                "analise_semantica": {
+                    "similaridade_produtivo": 0,
+                    "similaridade_improdutivo": 100,
+                    "diferenca": 100
+                },
+                "confianca": "AUTO (detecção de negação)"
+            }
+
+    # 2) 🔍 Embeddings semânticos normais
+    texto_embedding = model.encode([text])[0]
+
+    sim_prod = np.mean(cosine_similarity([texto_embedding], ref_embeddings["produtivo"])[0])
+    sim_improd = np.mean(cosine_similarity([texto_embedding], ref_embeddings["improdutivo"])[0])
+
+    # 3) 🔍 Soft decision
+    if sim_prod >= sim_improd:
+        categoria = "PRODUTIVO"
+    else:
+        categoria = "IMPRODUTIVO"
+
+    return {
+        "categoria": categoria,
+        "analise_semantica": {
+            "similaridade_produtivo": round(float(sim_prod * 100), 2),
+            "similaridade_improdutivo": round(float(sim_improd * 100), 2),
+            "diferenca": round(float(abs(sim_prod - sim_improd) * 100), 2)
+        },
+        "confianca": f"{round(float(abs(sim_prod - sim_improd) * 100), 1)}%"
+    }
+
+
+def generate_reply_semantic(text: str, categoria: str) -> str:
+    """
+    Resposta template baseada na categoria semântica
+    """
+    if categoria == "PRODUTIVO":
+        return """Olá!
+
+Recebemos sua solicitação e nossa equipe já está analisando.
+Retornaremos com uma resposta em breve.
+
+Atenciosamente,
+Equipe de Atendimento"""
+    else:
+        return """Olá!
+
+Muito obrigado pela sua mensagem!
+Ficamos felizes com o contato.
+
+Atenciosamente,
+Equipe"""
