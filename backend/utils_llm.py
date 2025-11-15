@@ -47,7 +47,7 @@ Responda somente com: PRODUTIVO ou IMPRODUTIVO."""
         elif "IMPRODUTIVO" in categoria:
             return "IMPRODUTIVO"
         else:
-            return "PRODUTIVO"  # Default
+            return "IMPRODUTIVO"  # Default
             
     except Exception as e:
         print(f"Erro na classificação LLM: {str(e)}")
