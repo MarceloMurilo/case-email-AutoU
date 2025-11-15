@@ -1,0 +1,48 @@
+IMPORTANTE - Tempo de Ativação do Servidor:
+
+A aplicação está hospedada no Render (plano gratuito), que coloca os servidores em modo "sleep" após períodos de inatividade. 
+
+Na primeira requisição do dia ou após um período sem uso, o servidor pode levar de 20 a 30 segundos para ser ativado. Por favor, aguarde esse tempo antes de tentar novamente caso a primeira requisição falhe.
+
+A aplicação possui um aviso visual no frontend informando sobre esse comportamento, e mensagens de erro específicas quando o servidor está sendo ativado.
+
+Após a primeira requisição bem-sucedida, o servidor permanece ativo e as próximas requisições são instantâneas.
+
+---
+
+Contexto e Decisões Técnicas:
+
+1. **Arquitetura:**
+   - Frontend: HTML/CSS/JavaScript puro (Netlify)
+   - Backend: FastAPI/Python (Render)
+   - Comunicação via API REST
+
+2. **Modos de Análise:**
+   - **Rápido (Gratuito)**: Análise baseada em palavras-chave usando NLTK
+   - **Premium (Pago)**: Análise inteligente usando OpenAI GPT-3.5-turbo
+   - **Avançado (Localhost)**: Análise semântica usando MiniLM (desabilitado em produção por ser muito pesado)
+
+3. **Decisões de Deploy:**
+   - Render foi escolhido para o backend por ser gratuito e fácil de configurar
+   - Netlify para frontend por ser simples e rápido
+   - Modo semântico (MiniLM) desabilitado em produção devido ao limite de memória do plano gratuito do Render
+
+4. **Melhorias de UX:**
+   - Interface user-friendly com linguagem não técnica
+   - Avisos sobre tempo de ativação do servidor
+   - Detecção automática de ambiente (localhost vs produção)
+   - Mensagens de erro claras e informativas
+
+5. **Funcionalidades:**
+   - Upload de arquivos .txt ou .pdf
+   - Cola de texto manual
+   - Classificação automática (PRODUTIVO/IMPRODUTIVO)
+   - Geração de respostas automáticas personalizadas
+   - Análise detalhada com estatísticas
+
+---
+
+Usuário de Teste:
+Não é necessário login ou autenticação. A aplicação é totalmente pública e pode ser usada diretamente.
+
+

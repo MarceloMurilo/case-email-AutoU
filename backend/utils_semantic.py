@@ -11,22 +11,27 @@ import os
 # Verificar se está em localhost (desenvolvimento)
 IS_LOCALHOST = os.getenv("RENDER") is None  # Render define variável RENDER em produção
 
-try:
-    from sentence_transformers import SentenceTransformer
-    from sklearn.metrics.pairwise import cosine_similarity
-    import numpy as np
-    
-    # Carregar modelo MiniLM apenas se estiver em localhost
-    if IS_LOCALHOST:
+# Tentar importar sentence-transformers apenas em localhost (não está instalado no Render)
+SEMANTIC_AVAILABLE = False
+model = None
+
+if IS_LOCALHOST:
+    try:
+        from sentence_transformers import SentenceTransformer
+        from sklearn.metrics.pairwise import cosine_similarity
+        import numpy as np
+        
+        # Carregar modelo MiniLM apenas se estiver em localhost
         model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
         SEMANTIC_AVAILABLE = True
-    else:
+    except ImportError:
+        # Fallback: usar NLP quando sentence-transformers não está disponível
         SEMANTIC_AVAILABLE = False
         model = None
-except ImportError:
-    # Fallback: usar NLP quando sentence-transformers não está disponível
-    SEMANTIC_AVAILABLE = False
-    model = None
+else:
+    # No Render, não tentar importar sentence-transformers (biblioteca não está instalada)
+    # sklearn e numpy são importados apenas quando necessário dentro das funções
+    pass
 
 # Importar NLP para fallback
 if not SEMANTIC_AVAILABLE:
