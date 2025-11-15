@@ -87,7 +87,7 @@ async def processar_email(
             "categoria": categoria,
             "resposta": resposta,
             "texto_original": email_text[:500] + ("..." if len(email_text) > 500 else ""),
-            "modo": "⚡ Rápido (NLP)",
+            "modo": "⚡ Rápido - Análise Básica",
             "tempo": f"{tempo_processamento:.2f}s",
             "custo": "Gratuito",
             "analise_nlp": resultado["analise"],
@@ -96,6 +96,7 @@ async def processar_email(
     
     elif modo == "semantico":
         # Modo Semântico: MiniLM (gratuito + inteligente)
+        # Disponível apenas em localhost (muito pesado para Render)
         resultado = classify_email_semantic(email_text)
         categoria = resultado["categoria"]
         resposta = generate_reply_semantic(email_text, categoria)
@@ -106,7 +107,7 @@ async def processar_email(
             "categoria": categoria,
             "resposta": resposta,
             "texto_original": email_text[:500] + ("..." if len(email_text) > 500 else ""),
-            "modo": "🧠 Semântico (MiniLM)",
+            "modo": "🧠 Avançado - Análise Inteligente",
             "tempo": f"{tempo_processamento:.2f}s",
             "custo": "Gratuito",
             "analise_semantica": resultado["analise_semantica"],
@@ -124,7 +125,7 @@ async def processar_email(
             "categoria": categoria,
             "resposta": resposta,
             "texto_original": email_text[:500] + ("..." if len(email_text) > 500 else ""),
-            "modo": "🎯 Inteligente (IA)",
+            "modo": "🎯 Premium - IA Completa",
             "tempo": f"{tempo_processamento:.2f}s",
             "custo": "~$0.002",
             "confianca": "95%+"

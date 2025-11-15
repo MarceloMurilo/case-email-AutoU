@@ -3,21 +3,33 @@
 Classificação Semântica usando MiniLM-L6-v2
 Com detecção de negação e ajustes inteligentes
 
-NOTA: Modo semântico desabilitado no Render (biblioteca muito pesada).
-Faz fallback para modo NLP quando sentence-transformers não está disponível.
+NOTA: Modo semântico disponível apenas em localhost (biblioteca muito pesada para Render).
+Faz fallback para modo NLP quando sentence-transformers não está disponível ou em produção.
 """
+import os
+
+# Verificar se está em localhost (desenvolvimento)
+IS_LOCALHOST = os.getenv("RENDER") is None  # Render define variável RENDER em produção
 
 try:
     from sentence_transformers import SentenceTransformer
     from sklearn.metrics.pairwise import cosine_similarity
     import numpy as np
     
-    # Carregar modelo MiniLM (somente 1 vez)
-    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-    SEMANTIC_AVAILABLE = True
+    # Carregar modelo MiniLM apenas se estiver em localhost
+    if IS_LOCALHOST:
+        model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+        SEMANTIC_AVAILABLE = True
+    else:
+        SEMANTIC_AVAILABLE = False
+        model = None
 except ImportError:
     # Fallback: usar NLP quando sentence-transformers não está disponível
     SEMANTIC_AVAILABLE = False
+    model = None
+
+# Importar NLP para fallback
+if not SEMANTIC_AVAILABLE:
     from utils_nlp import classify_email_nlp, generate_reply_nlp
 
 
@@ -72,8 +84,8 @@ REFERENCIAS = {
     ]
 }
 
-# Criar embeddings de referência só 1 vez (se disponível)
-if SEMANTIC_AVAILABLE:
+# Criar embeddings de referência só 1 vez (se disponível e em localhost)
+if SEMANTIC_AVAILABLE and model is not None:
     ref_embeddings = {
         cat: model.encode(frases)
         for cat, frases in REFERENCIAS.items()

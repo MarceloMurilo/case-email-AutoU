@@ -68,6 +68,8 @@ Regras:
 - Se for IMPRODUTIVO: responda de forma simpática e curta.
 - Não invente informações.
 - Máximo de 2 parágrafos curtos.
+- SEMPRE assine com "Equipe AutoU" no final. NUNCA use "[Seu Nome]", "[Nome]" ou qualquer placeholder.
+- A resposta deve ser completa e pronta para enviar, sem placeholders.
 
 Email:
 {text}"""
@@ -76,7 +78,7 @@ Email:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "Você é um assistente de email profissional."},
+                {"role": "system", "content": "Você é um assistente de email profissional da empresa AutoU. Sempre assine as respostas com 'Equipe AutoU'. Nunca use placeholders como [Seu Nome]."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
